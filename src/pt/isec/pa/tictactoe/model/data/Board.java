@@ -2,53 +2,72 @@ package pt.isec.pa.tictactoe.model.data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Scanner;
 
 public class Board implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    private static final int size = 3; // Default size for a Tic Tac Toe board
+    private char[][] board;
+    private char currentPlayer;
 
-    private char[][] board = new char[size][size]; // 2D array to represent the board
     public Board() {
-        resetBoard();
+        board = new char[3][3];
+        currentPlayer = 'X';
+        initializeBoard();
     }
 
-    public char[][] getBoard() {
-        return board;
+    private void initializeBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = ' ';
+            }
+        }
     }
 
-    public void setBoard(char[][] board) {
-        this.board = board;
+    public void showBoard() {
+        System.out.println("-------------");
+        for (int i = 0; i < 3; i++) {
+            System.out.print("| ");
+            for (int j = 0; j < 3; j++) {
+                System.out.print(board[i][j] + " | ");
+            }
+            System.out.println();
+            System.out.println("-------------");
+        }
     }
 
-    public boolean makeMove(int row, int col, char player) {
-        if (!isCellEmpty(row, col)) {
+    public boolean makeMove(int row, int col) {
+        if (row < 0 || row >= 3 || col < 0 || col >= 3 || board[row][col] != ' ') {
             return false; // Invalid move
         }
-        board[row][col] = player; // Place the player's mark on the board
-        return true; // The Move was successful
+        board[row][col] = currentPlayer;
+        return true; // Move made successfully
     }
 
-    public boolean isCellEmpty(int row, int col) {
-        return row >= 0 && row < size && col >= 0 && col < size && board[row][col] == ' ';
-    }
-
-    public boolean checkWin(char player) {
-        // Verificar linhas e colunas
-        for (int i = 0; i < size; i++) {
-            if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
-                    (board[0][i] == player && board[1][i] == player && board[2][i] == player)) {
+    public boolean checkWin() {
+        // Verificar linhas
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
                 return true;
             }
         }
+
+        // Verificar colunas
+        for (int j = 0; j < 3; j++) {
+            if (board[0][j] != ' ' && board[0][j] == board[1][j] && board[1][j] == board[2][j]) {
+                return true;
+            }
+        }
+
         // Verificar diagonais
-        return (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
-                (board[0][2] == player && board[1][1] == player && board[2][0] == player);
+        if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+            return true;
+        }
+
+        return board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0];
     }
 
-    public boolean isFull() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+    public boolean isDraw() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 if (board[i][j] == ' ') {
                     return false;
                 }
@@ -57,11 +76,11 @@ public class Board implements Serializable {
         return true;
     }
 
-    public void resetBoard() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                board[i][j] = ' '; // Reset each cell to a space character
-            }
-        }
+    public void switchPlayer() {
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+    }
+
+    public char getCurrentPlayer() {
+        return currentPlayer;
     }
 }
