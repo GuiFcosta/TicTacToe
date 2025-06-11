@@ -1,11 +1,9 @@
 package pt.isec.pa.tictactoe;
 
-import javafx.application.Application;
-import pt.isec.pa.tictactoe.ui.MainJFX;
+import pt.isec.pa.tictactoe.model.GameManager;
 
 public class Main {
     public static void main(String[] args) {
-        // Launch the JavaFX application
-        Application.launch(MainJFX.class, args);
+        GameManager gm = new GameManager();
     }
 }
